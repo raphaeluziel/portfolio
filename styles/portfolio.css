@@ -1,0 +1,100 @@
+// For browsers not using HTML5
+header, section, footer, aside, nav, main, article, figure {
+  display: block;
+}
+body{
+  font-size: 16px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  max-width: 1260px;
+  margin: 60px auto;
+}
+h1 {
+  font-family: 'Leckerli One', Helvetica, sans-serif;
+  text-align: center;
+}
+h2{
+  text-align: center;
+}
+p{
+  max-width: 400px;
+  padding: 10px;
+}
+.description{
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 12px;
+  padding: 2px;
+  width: 210px;
+  margin: 10px;
+}
+.logo{
+  width: 40px;
+  height: auto;
+  margin: 0px 10px 0px 10px;
+}
+.wide_logo{
+  width: 100px;
+  height: auto;
+  margin: 0px 10px 0px 10px;
+}
+.me{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.contacts{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+img{
+  width: 200px;
+  height: 150px;
+}
+.projects{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 5px;
+}
+button{
+  width: 70px;
+  height: 25px;
+  margin: 6px;
+  background-color: #B2F3F5;
+  border: 1px solid gray;
+  border-radius: 4px;
+  box-shadow: 2px 2px 1px #888888;
+  cursor: pointer;
+}
+button:hover{
+  background-color: pink;
+}
+.navbar {
+  max-width: 1260px;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  background-color: #eee;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+.navbar a {
+  float: left;
+  display: block;
+  color: #333;
+  text-align: center;
+  padding: 14px 36px;
+  text-decoration: none;
+  font-size: 16px;
+}
+.navbar a:hover {
+  background: #ddd;
+}
+hr{
+  width: 80%;
+}

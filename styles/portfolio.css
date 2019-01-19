@@ -19,6 +19,12 @@ p{
   max-width: 500px;
   padding: 10px;
 }
+.intro{
+  font-family: serif;
+  font-size: 18px;
+  color: #777;
+  font-style: italic;
+}
 .description{
   border: 1px solid #ddd;
   border-radius: 4px;

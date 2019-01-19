@@ -12,7 +12,8 @@ $(document).ready(function() {
     'd3',
     'python',
     'sql',
-    'flash'
+    'flash',
+    'node.js'
   ];
 
   projectTypes.forEach(function (projectType) {

@@ -13,7 +13,7 @@ $(document).ready(function() {
     'python',
     'sql',
     'flash',
-    'node.js'
+    'nodejs'
   ];
 
   projectTypes.forEach(function (projectType) {

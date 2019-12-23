@@ -6,12 +6,10 @@ $(document).ready(function() {
 
   var projectTypes = [
     'all',
-    'bootstrap',
+    'python',
     'jQuery',
     'react',
     'd3',
-    'python',
-    'sql',
     'flash',
     'nodejs'
   ];

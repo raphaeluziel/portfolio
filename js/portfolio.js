@@ -10,8 +10,8 @@ $(document).ready(function() {
     'jQuery',
     'react',
     'd3',
-    'flash',
-    'nodejs'
+    'nodejs',
+    'simulations'
   ];
 
   projectTypes.forEach(function (projectType) {

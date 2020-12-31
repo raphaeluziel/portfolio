@@ -1,24 +1,37 @@
 $(document).ready(function() {
 
-  $('#all').click(function(){
-    $('.all').show();
-  });
+  $('.all').hide();
+  $('.best').show();
 
   var projectTypes = [
-    'all',
+    'best',
     'python',
     'jQuery',
     'react',
     'd3',
     'nodejs',
-    'simulations'
+    'simulations',
+    'all',
   ];
 
-  projectTypes.forEach(function (projectType) {
+  var projectTypeNames = [
+    'My Best',
+    'Python',
+    'jQuery',
+    'React',
+    'd3',
+    'Node.js',
+    'Phaser3 and Flash',
+    'All',
+  ];
+
+  projectTypes.forEach(function (projectType, i) {
     $('#' + projectType).click(function(){
       $('.all').hide();
       $('.' + projectType).fadeIn(1000);
+      $('#projectTypeName').text(projectTypeNames[i] + ' Projects');
     });
   });
+
 
 });

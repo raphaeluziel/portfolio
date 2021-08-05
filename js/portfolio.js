@@ -15,7 +15,7 @@ $(document).ready(function() {
   ];
 
   var projectTypeNames = [
-    'My Best',
+    'My Best Past',
     'Python',
     'jQuery',
     'React',

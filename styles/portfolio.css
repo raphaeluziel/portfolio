@@ -33,10 +33,21 @@ h2{
   width: 210px;
   margin: 10px;
 }
+.examversions{
+  display: block;
+  margin: auto;
+  width: 252px;
+  height: 46px;
+}
 .logo{
   width: 40px;
   height: auto;
   margin: 0px 10px 0px 10px;
+}
+.nav_logo{
+  width: 30px;
+  height: 24px;
+  margin: 10px 40px;
 }
 .wide_logo{
   width: 100px;

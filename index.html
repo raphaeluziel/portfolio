@@ -19,28 +19,13 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="js/portfolio.js"></script>
 
-  <!-- Default Statcounter code for Portfolio https://raphaeluziel.net -->
-  <script type="text/javascript">
-  var sc_project=12456035;
-  var sc_invisible=1;
-  var sc_security="c77daad9";
-  var sc_https=1;
-  </script>
-  <script type="text/javascript"
-  src="https://www.statcounter.com/counter/counter.js" async></script>
-  <noscript><div class="statcounter">
-    <a title="Web Analytics" href="https://statcounter.com/" target="_blank">
-      <img class="statcounter" src="https://c.statcounter.com/12456035/0/c77daad9/1/" alt="Web Analytics"></a>
-    </div>
-  </noscript>
-  <!-- End of Statcounter Code -->
 
 </head>
 
 <body>
 
+
   <div class="navbar">
-    <img src="images/nav_logo.png" class="nav_logo" alt="logo">
     <a href="#home">Home</a>
     <a href="#projects">Projects</a>
     <a href="#contact">Contact</a>
@@ -48,7 +33,7 @@
 
   <h1 id="home">Raphael Uziel</h1>
   <div class="title"><strong>Web Development</strong></div>
-
+  <img src="images/logo.png" class="logo" alt="logo">
 
 
   <main>
@@ -57,31 +42,31 @@
       <div class="me">
         <img src="images/profile.jpg" />
         <p class="intro">
-          &nbsp;&nbsp;&nbsp;&nbsp;Looking deeper into the inner workings of a website, to the server side, the side most people never see or think about, has been my passion. My strength is Django, but I am also comfortable with Flask, JavaScript and can tie all aspects of a website into a unified system using clean, efficient, maintainable code. If you need help putting a professional website together, then I am your man.<br><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;Looking deeper into the inner workings of a website, to the server side, the side most people never see or think about, has been my passion. My strength is Django, but I am also comfortable with Flask, JavaScript and can tie all aspects of a website into a unified system using clean, efficient, maintainable code. Currently, I am the author, web developer, and only employee of <a href="https://examversions.com">examversions.com</a>.  Check it out. If you need help putting a professional website together, then I am your man.<br><br>
 
           &nbsp;&nbsp;&nbsp;&nbsp;My journey in computer science began decades ago with a college course in <a href="https://en.wikipedia.org/wiki/Pascal_(programming_language)" target="_blank">Pascal</a>! But I then chose to major in physics, earned a master’s degree, and went on to teach high school physics, which I have enjoyed doing for the past 30 years.<br><br>
 
           &nbsp;&nbsp;&nbsp;&nbsp;A few years ago, I got back into computer science with <a href="https://www.freecodecamp.org" target="_blank">freeCodeCamp</a>, earning their <a href="https://www.freecodecamp.org/certification/raphaeluziel/full-stack" target="_blank">Full Stack Certification</a>.  Then I completed two online courses offered by Harvard University through <a href="https://www.edx.org/" target="_blank">edX</a>, <a href="https://cs50.harvard.edu/certificates/6c74b553-de41-4dff-8502-bac98a712398" target="_blank">CS50x: Introduction to Computer Science</a>, and <a href="https://cs50.harvard.edu/certificates/44af1187-198e-4adb-8717-24fa4a4c701b" target="_blank">CS50w: Web Programming with Python and JavaScript</a>.  I have been learning C++ on my own using the book <a href="https://www.amazon.com/Primer-5th-Stanley-B-Lippman/dp/0321714113/ref=sr_1_1?dchild=1&keywords=c%2B%2B+primer&qid=1609369476&sr=8-1" target="_blank">C++ Primer</a> by Lippman, Lajoie and Moo, studied computer algorithms through Princeton's <a href="https://www.coursera.org/learn/algorithms-part1" target="_blank">Algorithms</a> course on Coursera, and learning assembly language using the online book <a href="http://www.egr.unlv.edu/~ed/x86.html" target="_blank">x86-64 Assembly Language Programming with Ubuntu</a>, by Ed Jorgensen.  And dabbling in computer systems administration has led to this website, whose server I manage.<br><br>
-
-          &nbsp;&nbsp;&nbsp;&nbsp;Currently, I am the author, web developer, and only employee of <a href="https://examversions.com">examversions.com</a>.  Check it out.<br><br>
         </p>
+
       </div>
+
+      <a href="https://examversions.com" class="examversions"><img src="images/examversions.png" alt="examversions"></a>
+
     </section>
 
-    <a href="https://examversions.com" class="examversions"><img src="images/examversions.png" alt="examversions"></a>
-
-    <br><br><br>
 
 
-    <hr />
+    <br><br><hr class="divider"><br>
+
     <div id="projects"></div>
     <section>
-      <header><h2 id="projectTypeName">My Best Past Projects</h2></header>
+      <header><h2 id="projectTypeName">Past Projects</h2></header>
 
       <div class="projects">
-        <button type="button" class="button" id="best">My Best</button>
+        <button type="button" class="button" id="best">Favorite</button>
         <button type="button" class="button" id="python">Python</button>
-        <button type="button" class="button" id="nodejs">Node.js</button>
+        <button type="button" class="button" id="nodejs">Node</button>
         <button type="button" class="button" id="react">React</button>
         <button type="button" class="button" id="jQuery">jQuery</button>
         <button type="button" class="button" id="d3">D3</button>
@@ -89,39 +74,41 @@
         <button type="button" class="button" id="all">ALL</button>
       </div>
 
+      <br>
+
       <div class="projects">
         <div class="description best all python">
-          <a href="https://quiz.raphaeluziel.net" target="_blank">
+          <a href="https://quiz.raphaeluziel.com" target="_blank">
             <img src="images/quiz.png" alt="CS50-Web Final Project: Quiz" />
           </a>
           <p>CS50 Web Final project (Quiz Games) using Flask-SocketIO</p>
         </div>
         <div class="description best all python">
-          <a href="https://pizza.raphaeluziel.net" target="_blank">
+          <a href="https://pizza.raphaeluziel.com" target="_blank">
             <img src="images/pizza.png" alt="Pizza Ordering System" />
           </a>
           <p>Pizza ordering system using Django</p>
         </div>
         <div class="description all python">
-          <a href="https://flack.raphaeluziel.net" target="_blank">
+          <a href="https://flack.raphaeluziel.com" target="_blank">
             <img src="images/flack.png" alt="Flack (attempt at emulating Slack)" />
           </a>
           <p>Flack (attempt at emulating Slack)</p>
         </div>
         <div class="description all python">
-          <a href="https://books.raphaeluziel.net" target="_blank">
+          <a href="https://books.raphaeluziel.com" target="_blank">
             <img src="images/books.png" alt="Book review app using Flask" />
           </a>
           <p>Book Review App using Flask</p>
         </div>
         <div class="description best all nodejs">
-          <a href="https://exercise.raphaeluziel.net" target="_blank">
+          <a href="https://exercise.raphaeluziel.com" target="_blank">
             <img src="images/exercise_tracker.jpg" alt="Node.js Exercise Tracker" />
           </a>
           <p>Exercise Tracker using Node.js, Express, Mongoose and MongoDB</p>
         </div>
         <div class="description all python">
-          <a href="https://cs50final.raphaeluziel.net" target="_blank">
+          <a href="https://cs50final.raphaeluziel.com" target="_blank">
             <img src="images/cs50.jpg" alt="cs50 Final Project" />
           </a>
           <p>CS50 Final project using Python</p>
@@ -234,31 +221,31 @@
           <p>Tribute to Einstein</p>
         </div>
         <div class="description best all simulations">
-          <a href="https://raphaeluziel.net/physics-sims/photoelectric/index.html" target="_blank">
+          <a href="https://raphaeluziel.com/physics-sims/photoelectric/index.html" target="_blank">
             <img src="images/photoelectric.jpg" alt="Photoelectric Effect Simulation" />
           </a>
           <p>Photoelectric Effect simulation using Phaser3</p>
         </div>
         <div class="description all simulations">
-          <a href="http://raphaeluziel.net/physics/index.html" target="_blank">
+          <a href="http://raphaeluziel.com/physics/index.html" target="_blank">
             <img src="images/hsas.jpg" alt="Physics Website" />
           </a>
           <p>My old physics website with flash simulations</p>
         </div>
       </div>
     </section>
-    <hr />
 
+    <br><br><hr class="divider"><br>
     <div id="contact"></div>
     <section>
-      <header><h2>Contact</h2></header>
+      <header><h2 id="projectTypeName">Contact</h2></header>
 
         <div class="contacts">
           <a href="https://github.com/raphaeluziel" target="_blank">
-            <img class="logo" src="images/logo_github.png" alt="GitHub" />
+            <img class="contact_logo" src="images/logo_github.png" alt="GitHub" />
           </a>
           <a href="https://linkedin.com/in/raphael-uziel-006350205" target="_blank">
-            <img class="logo" src="images/logo_linkedin.png" alt="LinkedIn" />
+            <img class="contact_logo" src="images/logo_linkedin.png" alt="LinkedIn" />
           </a>
           <a href="https://www.freecodecamp.org/raphaeluziel" target="_blank">
             <img class="wide_logo" src="images/logo_freecodecamp.jpg" alt="FreeCodeCamp" style="width: 150px;"/>
@@ -270,11 +257,22 @@
             <a href="https://glitch.com/@raphaeluziel" target="_blank" style="text-decoration:none; font-weight:bold;">Glitch</a>
           </button>
           <a href="mailto:raphaeluziel@hotmail.com" target="_blank">
-            <img class="logo" src="images/logo_email.png" style="width:56px; height:56px;" alt="Email" />
+            <img class="contact_logo" src="images/logo_email.png" style="width:56px; height:56px;" alt="Email" />
           </a>
         </div>
 
     </section>
+
+    <footer class="footer">
+      <small>
+        Created by Raphael Uziel
+      </small>
+      <br>
+      <small>
+        Copyright &copy; 2021 raphaeluziel.com
+      </small>
+    </footer>
+
   </main>
 
   <!-- Default Statcounter code for Portfolio https://raphaeluziel.com -->

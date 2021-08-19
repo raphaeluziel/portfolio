@@ -15,12 +15,12 @@ $(document).ready(function() {
   ];
 
   var projectTypeNames = [
-    'My Best Past',
+    'Best',
     'Python',
     'jQuery',
     'React',
     'd3',
-    'Node.js',
+    'Node',
     'Phaser3 and Flash',
     'All',
   ];
@@ -29,7 +29,7 @@ $(document).ready(function() {
     $('#' + projectType).click(function(){
       $('.all').hide();
       $('.' + projectType).fadeIn(1000);
-      $('#projectTypeName').text(projectTypeNames[i] + ' Projects');
+      // $('#projectTypeName').text(projectTypeNames[i] + ' Projects');
     });
   });
 

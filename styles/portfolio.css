@@ -14,8 +14,11 @@ h1 {
   color: green;
   margin-bottom: 0px;
 }
-h2{
+h2, h3, h4, h5, h6 {
   text-align: center;
+}
+hr.divider {
+  border: 1px solid #ddd;
 }
 .intro{
   font-family: serif;
@@ -35,11 +38,24 @@ h2{
 }
 .examversions{
   display: block;
-  margin: auto;
+  margin: 10px auto;
   width: 252px;
   height: 46px;
+  padding: 10px;
+  border: 2px solid orange;
+  border-radius: 4px;
+}
+.footer {
+  color: #999;
+  text-align: center;
 }
 .logo{
+  display: block;
+  width: 82px;
+  height: auto;
+  margin: 20px auto;
+}
+.contact_logo {
   width: 40px;
   height: auto;
   margin: 0px 10px 0px 10px;
@@ -64,7 +80,7 @@ h2{
   border: 1px solid gray;
   border-radius: 4px;
   box-shadow: 4px 4px 28px #888888;
-  margin: 14px;
+  margin: 18px;
 }
 .contacts{
   display: flex;

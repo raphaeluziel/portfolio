@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Raphael Uziel">
+  <meta name="description" content="Articles on Django.">
+  <meta name="author" content="Raphael Uziel">
+
+  <title>Django</title>
+
+  <link href='styles/articles.css' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Leckerli+One' rel='stylesheet' type='text/css'>
+
+  <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="js/portfolio.js"></script>
+
+  <link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/default.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+
+  <link rel="stylesheet" href="styles/atom-one-light.min.css">
+  <script src="js/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+
+</head>
+
+<body>
+
+
+  <div class="navbar">
+    <a href="#home">Home</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+  </div>
+
+  <h1 id="home">Raphael Uziel</h1>
+  <div class="title"><strong>Web Development</strong></div>
+  <img src="images/logo.png" class="logo" alt="logo">
+
+
+  <main>
+
+    <section>
+      <div class="me">
+        <img src="images/profile.jpg" />
+        <p class="intro">
+          &nbsp;&nbsp;&nbsp;&nbsp;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Et ligula ullamcorper malesuada proin libero nunc consequat interdum. Nisl nunc mi ipsum faucibus vitae aliquet nec ullamcorper sit. Arcu risus quis varius quam quisque id diam vel quam. Sollicitudin aliquam ultrices sagittis orci a scelerisque purus semper eget. Morbi tempus iaculis urna id volutpat. Eleifend donec pretium vulputate sapien nec sagittis. Mauris sit amet massa vitae tortor. Orci porta non pulvinar neque. Amet nisl purus in mollis nunc sed id semper risus. Iaculis urna id volutpat lacus laoreet non. Quis imperdiet massa tincidunt nunc. Urna condimentum mattis pellentesque id nibh. Vitae aliquet nec ullamcorper sit. Sagittis aliquam malesuada bibendum arcu vitae elementum. Pellentesque habitant morbi tristique senectus. Posuere sollicitudin aliquam ultrices sagittis orci. Nunc sed blandit libero volutpat sed cras..
+        </p>
+      </div>
+    </section>
+
+    <br><br><hr class="divider"><br>
+
+    <section>
+      <header><h2 id="projectTypeName">Django</h2></header>
+      <div class="article">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Et ligula ullamcorper malesuada proin libero nunc consequat interdum. Nisl nunc mi ipsum faucibus vitae aliquet nec ullamcorper sit. Arcu risus quis varius quam quisque id diam vel quam. Sollicitudin aliquam ultrices sagittis orci a scelerisque purus semper eget. Morbi tempus iaculis urna id volutpat. Eleifend donec pretium vulputate sapien nec sagittis. Mauris sit amet massa vitae tortor. Orci porta non pulvinar neque. Amet nisl purus in mollis nunc sed id semper risus. Iaculis urna id volutpat lacus laoreet non. Quis imperdiet massa tincidunt nunc. Urna condimentum mattis pellentesque id nibh. Vitae aliquet nec ullamcorper sit. Sagittis aliquam malesuada bibendum arcu vitae elementum. Pellentesque habitant morbi tristique senectus. Posuere sollicitudin aliquam ultrices sagittis orci. Nunc sed blandit libero volutpat sed cras.<br><br>
+
+<pre>
+<code class="language-python">
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render, redirect
+from django.urls import reverse
+from django.views import generic
+from django.utils import timezone
+
+from .models import Choice, Question
+
+def vote(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    try:
+        selected_choice = question.choice_set.get(pk=request.POST['choice'])
+    except (KeyError, Choice.DoesNotExist):
+        # Redisplay the question voting form.
+        return render(request, 'polls/detail.html', {
+            'question': question,
+            'error_message': "You didn't select a choice.",
+        })
+    else:
+        selected_choice.votes += 1
+        selected_choice.save()
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return Redirect('polls:results', args=(question.id,))
+</code>
+</pre>
+
+        Aliquet porttitor lacus luctus accumsan tortor posuere ac ut consequat. Nulla pharetra diam sit amet nisl suscipit. Suspendisse potenti nullam ac tortor vitae purus faucibus ornare. Platea dictumst quisque sagittis purus sit amet. Ultrices vitae auctor eu augue ut. Pellentesque habitant morbi tristique senectus et netus et malesuada fames. Augue ut lectus arcu bibendum. Tempus urna et pharetra pharetra massa massa ultricies mi quis. Mauris augue neque gravida in fermentum et sollicitudin ac. Massa eget egestas purus viverra accumsan in nisl. Vitae elementum curabitur vitae nunc. Rhoncus urna neque viverra justo nec ultrices dui. Consectetur adipiscing elit pellentesque habitant morbi tristique.
+
+      </div>
+    </section>
+
+    <br><br><hr class="divider"><br>
+    <div id="contact"></div>
+    <section>
+      <header><h2 id="projectTypeName">Contact</h2></header>
+
+        <div class="contacts">
+
+          <a href="https://stackoverflow.com/users/10951070/raphael">
+            <img src="https://stackoverflow.com/users/flair/10951070.png" width="156" height="44"
+                 alt="profile for raphael at Stack Overflow, Q&amp;A for professional and enthusiast programmers"
+                 title="profile for raphael at Stack Overflow, Q&amp;A for professional and enthusiast programmers">
+          </a>
+
+          <a href="https://github.com/raphaeluziel" target="_blank">
+            <img class="contact_logo" src="images/logo_github.png" alt="GitHub" />
+          </a>
+          <a href="https://linkedin.com/in/raphael-uziel-006350205" target="_blank">
+            <img class="contact_logo" src="images/logo_linkedin.png" alt="LinkedIn" />
+          </a>
+          <a href="https://www.freecodecamp.org/raphaeluziel" target="_blank">
+            <img class="wide_logo" src="images/logo_freecodecamp.jpg" alt="FreeCodeCamp" style="width: 150px;"/>
+          </a>
+          <a href="https://codepen.io/raphaeluziel/" target="_blank">
+            <img class="wide_logo" src="images/logo_codepen.png" alt="CodePen" />
+          </a>
+          <button type="button" style="background-color:#F9E79F;">
+            <a href="https://glitch.com/@raphaeluziel" target="_blank" style="text-decoration:none; font-weight:bold;">Glitch</a>
+          </button>
+          <a href="mailto:raphaeluziel@hotmail.com" target="_blank">
+            <img class="contact_logo" src="images/logo_email.png" style="width:56px; height:56px;" alt="Email" />
+          </a>
+        </div>
+
+    </section>
+
+    <footer class="footer">
+      <small>
+        Created by Raphael Uziel
+      </small>
+      <br>
+      <small>
+        Copyright &copy; 2022 raphaeluziel.com
+      </small>
+    </footer>
+
+  </main>
+
+  <!-- Default Statcounter code for Portfolio https://raphaeluziel.com -->
+  <script type="text/javascript">
+    var sc_project=12573636;
+    var sc_invisible=1;
+    var sc_security="5f72dd46";
+  </script>
+  <script type="text/javascript"
+          src="https://www.statcounter.com/counter/counter.js"
+          async></script>
+  <noscript>
+    <div class="statcounter">
+      <a title="Web Analytics Made Easy - StatCounter"
+         href="https://statcounter.com/"
+         target="_blank">
+         <img class="statcounter"
+              src="https://c.statcounter.com/12573636/0/5f72dd46/1/"
+              alt="Web Analytics Made Easy - StatCounter">
+      </a>
+    </div>
+  </noscript>
+  <!-- End of Statcounter Code -->
+
+
+
+</body>
+
+</html>

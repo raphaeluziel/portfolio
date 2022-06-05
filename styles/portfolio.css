@@ -86,8 +86,8 @@ pre {
   margin: 10px auto;
 }
 .me img{
-  float: right;
-  width: 250px;
+  float: left;
+  width: 100px;
   border: 1px solid gray;
   border-radius: 4px;
   box-shadow: 4px 4px 28px #888888;

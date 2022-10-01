@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Raphael Uziel">
+  <meta name="description" content="Articles on Django.">
+  <meta name="author" content="Raphael Uziel">
+
+  <title>Django</title>
+
+  <link href='styles/articles.css' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Leckerli+One' rel='stylesheet' type='text/css'>
+
+  <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="js/portfolio.js"></script>
+
+  <link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/default.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+
+  <link rel="stylesheet" href="styles/atom-one-light.min.css">
+  <script src="js/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+
+</head>
+
+<body>
+
+
+  <div class="navbar">
+    <a href="#home">Home</a>
+    <a href="#contact">Contact</a>
+  </div>
+
+  <h1 id="home">Raphael Uziel</h1>
+  <div class="title"><strong>Web Development</strong></div>
+  <img src="images/logo.png" class="logo" alt="logo">
+
+
+  <main>
+
+    <section>
+      <header><h2 id="projectTypeName">Making Django Forms Dynamic with JavaScript</h2></header>
+      <div class="article">
+
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        No, you don't <em>need</em> JavaScript to handle forms in Django, but remember that Django lives on the server, not the client, which means that if you want to have options in a form change as the user selects or answers questions, the user will have to submit the form midway in order to receive an updated form.  This requires a page reload.  JavaScript, on the other hand, lives on the client side, and with JavaScript's <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/AJAX/Getting_Started" target="_blank">AJAX</a> requests you can have the form send requests to the server, the server respond, and the JavaScript can update the form <em>all without reloading the page</em>.  Specifically, I will will be using JavaScript's <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API" target="_blank">Fetch API</a>, which makes this process simple.
+        <br><br>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        If you would likew to follow along, you can grab the starting point for the django project <a href="https://github.com/raphaeluziel/django-quiz" target="_blank">here</a>, and follow the instructions to set it up on your computer.  Keep in mind that this is not the complete code, just the starting point.  The <em>form</em> we will be creating is a simple quiz where a player answers questions and just receives a score of how many questions were answered correctly.  Nothing fancy.
+        <br><br>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        First let's get oriented by looking at the models.  We have four models.  The player, the categories, the questions in each category, and the answers for each question.  Please note that, for brevity, I am not showing all the code here.  Again if you want the full code, just grap it <a href="https://github.com/raphaeluziel/django-quiz" target="_blank">here</a>.
+        <br><br>
+
+
+<pre><code class="language-python"># models.py
+
+class Player(models.Model):
+    player = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    questions_answered = models.ManyToManyField('Question', blank=True)
+    score = models.PositiveSmallIntegerField(default=0)
+
+class Category(models.Model):
+    category = models.CharField(max_length=20)
+
+class Question(models.Model):
+    question = models.CharField(max_length=200)
+    value = models.PositiveSmallIntegerField()
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    correct_answer = models.OneToOneField('Answer', on_delete=models.CASCADE, related_name='correct_answer', null=True)
+
+class Answer(models.Model):
+    answer = models.CharField(max_length=200)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answer')
+</code></pre>
+
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        I've also created a form.  I won't actually be using the form in the template, I just want to use it to make it easy to validate the form once it is submitted.
+        <br><br>
+
+
+<pre><code class="language-python"># forms.py
+
+class QuizForm(forms.Form):
+    category_pk = forms.IntegerField(min_value=0)
+    question_pk = forms.IntegerField(min_value=0)
+    answer_pk = forms.IntegerField(min_value=0)
+</code></pre>
+
+
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        Let's begin with the view.  Right now, all it does is get us to the page.  Let's initially send it the player, as well as all the categories, all the questions and all the answers.  Later, you will see that we don't need to send <em>all</em> the questions and answers, in fact we won't be sending <em>any</em> questions or answers via this view, since that will be handled by JavaScript's fetch.  But let's leave it for now.
+        <br><br>
+
+
+<pre><code class="language-python"># views.py
+
+@login_required
+def quiz(request):
+
+    player, created = Player.objects.get_or_create(player=request.user)
+
+    categories = Category.objects.all()
+    questions = Question.objects.all()
+    answers = Answer.objects.all()
+
+    context = {
+        'player': player,
+        'categories': categories,
+        'questions': questions,
+        'answers': answers,
+    }
+
+    return render(request, "quiz/quiz.html", context)
+</code></pre>
+
+
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        And here is the HTML template:
+        <br><br>
+
+
+<pre><code class="language-html">&lt;!-- quiz.html --&gt;
+
+&lt;form action="#" method="post"&gt;
+    {% csrf_token %}
+
+    &lt;select class="form-select" name="category_pk"&gt;
+        &lt;option selected disabled&gt;Category&lt;/option&gt;
+        {% for category in categories %}
+            &lt;option value="{{ category.pk }}"&gt;{{ category }}&lt;/option&gt;
+        {% endfor %}
+    &lt;/select&gt;
+
+    &lt;br&gt;
+
+    &lt;select class="form-select" name="question_pk"&gt;
+        &lt;option selected disabled value="0"&gt;Question&lt;/option&gt;
+        {% for question in questions %}
+            &lt;option value="{{ question.pk }}"&gt;{{ question }}&lt;/option&gt;
+        {% endfor %}
+    &lt;/select&gt;
+
+    &lt;br&gt;
+
+    &lt;select class="form-select" name="answer_pk"&gt;
+        &lt;option selected disabled value="0"&gt;Answer&lt;/option&gt;
+        {% for answer in answers %}
+            &lt;option value="{{ answer.pk }}"&gt;{{ answer }}&lt;/option&gt;
+        {% endfor %}
+    &lt;/select&gt;
+
+    &lt;br&gt;
+
+    &lt;p&gt;Score: &lt;strong&gt;{{ player.score }}&lt;/strong&gt; &lt;/p&gt;
+
+    &lt;input class="btn btn-primary" type="submit" value="submit"&gt;
+
+&lt;/form&gt;
+</code></pre>
+
+
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        Okay, now run it, and you see a big problem.  I've seeded the database with 4 categories, each with 4 questions, and each question with 4 answer choices.  That's 64 answers, and the user can select <em>any</em> of them, without even selecting a category first!  Of course, we could have the form just send the category and then have our view filter out the questions and send it back to the client, but that means a page reload, which is what we are trying to avoid.
+        <br><br>
+
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        Before we get into the JavaScript, let's add to our views functions that will respond to requests sent by the client through the fetch API.  All we need to do is filter the questions based on the category that the user will choose, or filter the answers to the question chosen by the user.  This is easy:
+        <br><br>
+
+
+<pre><code class="language-python"># views.py
+
+@login_required
+def get_questions(request, category_pk):
+    questions = Question.objects.filter(category=category_pk)
+    return JsonResponse(list(questions.values()), safe=False)
+
+@login_required
+def get_answers(request, question_pk):
+    answers = Answer.objects.filter(question=question_pk)
+    return JsonResponse(list(answers.values()), safe=False)
+
+@login_required
+def quiz(request):
+
+    player, created = Player.objects.get_or_create(player=request.user)
+
+    categories = Category.objects.all()
+    questions = Question.objects.all()
+    answers = Answer.objects.all()
+
+    context = {
+        'player': player,
+        'categories': categories,
+        'questions': questions,
+        'answers': answers,
+    }
+
+    return render(request, "quiz/quiz.html", context)
+</code></pre>
+
+
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        Notice that instead of returning a template, we are returning a <a href="https://docs.djangoproject.com/en/4.1/ref/request-response/#jsonresponse-objects">JsonResponse</a>.  This is what the JavaScript code on the client side will receive.  First we turn the QuerySet into one that returns dictionaries instead of model instances with <a href="https://docs.djangoproject.com/en/4.1/ref/models/querysets/#values">values()</a>, then turn thie queryset into a list of these dictionaries since JavaScript doesn't know what to do with a queryset.  Since we are sending a list we need to set safe to false.  It's okay to set safe to false as stated in the <a href="JsonResponse">Django docs</a>, but if you are worried, you could wrap the list in a dictionary like this (but then you will also have to modify the JavaScript to extract the list from this wrapper dictionary):
+        <br><br>
+
+<pre><code class="language-python">return JsonResponse({'filtered-answers': list(answers.values())})</code></pre>
+
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        So now the server is ready to respond, but just like with regular views that return templates, we need to add paths to these views as well in our urls.py:
+        <br><br>
+
+<pre><code class="language-python"># urls.py
+
+urlpatterns = [
+    path('', views.quiz, name='quiz'),
+    path('get_questions/&lt;int:category_pk&gt;', views.get_questions, name='get_questions'),
+    path('get_answers/&lt;int:question_pk&gt;', views.get_answers, name='get_answers'),
+]
+</code></pre>
+
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        Now we have a way to respond from the server, but now we need to send the server the request using JavaScript fetch.  First we need to modify the html template:
+        <br><br>
+
+<pre><code class="language-html">&lt;!-- quiz.html --&gt;
+
+&lt;form action="#" method="post"&gt;
+    {% csrf_token %}
+
+    &lt;select class="form-select" name="category_pk id="category""&gt;
+        &lt;option selected disabled&gt;Category&lt;/option&gt;
+        {% for category in categories %}
+            &lt;option value="{{ category.pk }}"&gt;{{ category }}&lt;/option&gt;
+        {% endfor %}
+    &lt;/select&gt;
+
+    &lt;br&gt;
+
+    &lt;select class="form-select" name="question_pk" id="question"&gt;
+        &lt;option selected disabled value="0"&gt;Question&lt;/option&gt;
+    &lt;/select&gt;
+
+    &lt;br&gt;
+
+    &lt;select class="form-select" name="answer_pk" id="answer"&gt;
+        &lt;option selected disabled value="0"&gt;Answer&lt;/option&gt;
+    &lt;/select&gt;
+
+    &lt;br&gt;
+
+    &lt;p&gt;Score: &lt;strong&gt;{{ player.score }}&lt;/strong&gt; &lt;/p&gt;
+
+    &lt;input class="btn btn-primary" type="submit" value="submit" id="submit"&gt;
+
+&lt;/form&gt;
+</code></pre>
+
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        Notice that we removed the for loops in the select for the questions and for the answers since we will be fetching those with JavaScript.  We also added an id attribute to the each of the select tags as well as the submit button.  This is how we can target them in our JavaScript.  Note that we no longer need to send all the questions and answers from the initial view anymore:
+        <br><br>
+
+<pre><code class="language-python"># views.py
+
+@login_required
+def get_questions(request, category_pk):
+    questions = Question.objects.filter(category=category_pk)
+    return JsonResponse(list(questions.values()), safe=False)
+
+@login_required
+def get_answers(request, question_pk):
+    answers = Answer.objects.filter(question=question_pk)
+    return JsonResponse(list(answers.values()), safe=False)
+
+@login_required
+def quiz(request):
+
+    player, created = Player.objects.get_or_create(player=request.user)
+
+    categories = Category.objects.all()
+
+    context = {
+        'player': player,
+        'categories': categories,
+    }
+
+    return render(request, "quiz/quiz.html", context)
+</code></pre>
+
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        Of course, now if you run it, no questions or answers will show up.  We can finally go to our JavaScript to fetch and update the forms.  You will find the javascript file in the path <em>"/quiz/static/quiz/js/quiz.js"</em>.
+        <br><br>
+
+
+
+<pre><code class="language-js">// quiz.js
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    // Target the select tags in the DOM (the html template)
+    let category = document.getElementById('category');
+    let question = document.getElementById('question');
+    let answer = document.getElementById('answer');
+    let submit = document.getElementById('submit');
+
+    // Hide the questions and answers until the user selects a category
+    question.style.display = 'none';
+    answer.style.display = 'none';
+
+    // Disable (you could also hide) the button until the form is completed
+    submit.disabled = true;
+
+
+    ////////////////////////////////////////////////////////////////////////
+    ///////////////////////// GET QUESTIONS ////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////
+
+    async function get_questions(e) {
+
+        answer.style.display = 'none';
+        answer.value = 0;
+        question.value = 0;
+        submit.disabled = true;
+
+        fetch(`/get_questions/${e.target.value}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(`Success: ${data}`);
+            for (i = 0; i < data.length; i++) {
+                question.options[i+1] = new Option(data[i].question, data[i].id);
+            }
+            question.style.display = 'block';
+        })
+        .catch((error) => {
+            console.error(`Error: ${error}`);
+        });
+    }
+
+    category.addEventListener('input', get_questions);
+
+
+    ////////////////////////////////////////////////////////////////////////
+    ///////////////////////// GET ANSWERS //////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////
+
+    async function get_answers(e) {
+
+        answer.value = 0;
+        submit.disabled = true;
+
+        fetch(`/get_answers/${e.target.value}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(`Success: ${data}`);
+            for (i = 0; i < data.length; i++) {
+                answer.options[i+1] = new Option(data[i].answer, data[i].id);
+            }
+            answer.style.display = 'block';
+        })
+        .catch((error) => {
+            console.error(`Error: ${error}`);
+        });
+    }
+
+    question.addEventListener('input', get_answers);
+
+
+    ////////////////////////////////////////////////////////////////////////
+    /////////////////////// Enable/Disable SUBMIT //////////////////////////
+    ////////////////////////////////////////////////////////////////////////
+
+    answer.addEventListener('input', () => {
+        submit.disabled = false;
+    });
+
+});
+</code></pre>
+
+
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        The fetch() function is what sends the request, and all you need to supply is the url of the path.  Fetch can also do much more.  It can also send information to the server using a post request, but for this tutorial we will not be using fetch to modify the database, only to get information from it.  <strong>Never use a get request like we are doing here to modify the database!</strong>  Now the fetch() function is an asynchronous function, which means that while it fetching the data, the rest of the page works, and the rest of the code continues to be executed line by line.  What fetch() returns is called a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">promise</a>.  In other words, fetch() is promising that it will get back to you with a response (or error, if it couldn't fetch the data).  The promise will be resolved into a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Response" target="_blank">response</a>, which includes a lot of information, including whether the connection was succesful, and that there was a response from the server (Django view).  We can check that everything went okay with <a href="https://developer.mozilla.org/en-US/docs/Web/API/Response/ok">ok</a> property of the response.
+        <br><br>
+
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        If the response is indeed ok, <strong>then</strong> we can actually start reading in the data, and that is why we have a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then" target="_blank">then()</a> method attached to the fetch(). The then() method waits until the response is received before acting, which is why it is called then()!  In thie first then() what is done is the actual data is read, and that is what the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Response/json" target="_blank">json()</a> method will do.  This method is also asynchronous, and so it has it's own then() method attached to it.  This is when the data is actually read.
+        <br><br>
+
+
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        The data is that list we sent from the server!  Now we can loop through the array and add an Option to the select.  If something goes wrong the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch" target="_blank">catch()</a> method will be activated instead of the then().  Also note that we have <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener" target="_blank">addEventListener()</a> methods with 'input' as the event.  This <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/input_event" target="_blank">input </a> event will fire when the user selects an option, and then the event listener will fire the function.  So for example, when the user selects a category, the event listener attached to category will fire the get_questions function.  The e.target.value will be the value of the selected option, which is the primary key of the category, which we need so that we can get the questions for that particular category.  Note that we add the question's primary key as well as the question itself when we create the <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLOptionElement/Option" target="_blank">Option</a>:
+        <br><br>
+
+<pre><code class="language-js">question.options[i+1] = new Option(data[i].question, data[i].id);</code></pre>
+
+
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        If you run the code now, it shoud work.  But you will notice two problems.  First, when the form is submitted, the page reloads, but no information is sent to our inital quiz view.  No score is kept.  Second, we want to make it so that a user can answer a question only once.  Let's modify the view first, so we can accept the form and update the player's score, and record that the player has answered the particular quesion:
+        <br><br>
+
+
+<pre><code class="language-python"># views.py
+
+@login_required
+def quiz(request):
+
+    player, created = Player.objects.get_or_create(player=request.user)
+
+    categories = Category.objects.all()
+
+    form = QuizForm(request.POST or None)
+
+    if form.is_valid():
+        question = get_object_or_404(Question, pk=request.POST.get('question_pk'))
+        answer = get_object_or_404(Answer, pk=request.POST.get('answer_pk'))
+        player.questions_answered.add(question)
+        if answer == question.correct_answer:
+            player.score = player.score + 1
+            player.save()
+        return redirect('quiz:quiz')
+
+
+    context = {
+        'player': player,
+        'categories': categories,
+    }
+
+    return render(request, "quiz/quiz.html", context)
+</code></pre>
+
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        <br><br>
+
+
+
+
+      </div>
+    </section>
+
+    <br><br><hr class="divider"><br>
+    <div id="contact"></div>
+    <section>
+      <header><h2 id="projectTypeName">Contact</h2></header>
+
+        <div class="contacts">
+
+          <a href="https://stackoverflow.com/users/10951070/raphael">
+            <img src="https://stackoverflow.com/users/flair/10951070.png" width="156" height="44"
+                 alt="profile for raphael at Stack Overflow, Q&amp;A for professional and enthusiast programmers"
+                 title="profile for raphael at Stack Overflow, Q&amp;A for professional and enthusiast programmers">
+          </a>
+
+          <a href="https://github.com/raphaeluziel" target="_blank">
+            <img class="contact_logo" src="images/logo_github.png" alt="GitHub" />
+          </a>
+          <a href="https://linkedin.com/in/raphael-uziel-006350205" target="_blank">
+            <img class="contact_logo" src="images/logo_linkedin.png" alt="LinkedIn" />
+          </a>
+          <a href="https://www.freecodecamp.org/raphaeluziel" target="_blank">
+            <img class="wide_logo" src="images/logo_freecodecamp.jpg" alt="FreeCodeCamp" style="width: 150px;"/>
+          </a>
+          <a href="https://codepen.io/raphaeluziel/" target="_blank">
+            <img class="wide_logo" src="images/logo_codepen.png" alt="CodePen" />
+          </a>
+          <button type="button" style="background-color:#F9E79F;">
+            <a href="https://glitch.com/@raphaeluziel" target="_blank" style="text-decoration:none; font-weight:bold;">Glitch</a>
+          </button>
+          <a href="mailto:raphaeluziel@hotmail.com" target="_blank">
+            <img class="contact_logo" src="images/logo_email.png" style="width:56px; height:56px;" alt="Email" />
+          </a>
+        </div>
+
+    </section>
+
+    <footer class="footer">
+      <small>
+        Created by Raphael Uziel
+      </small>
+      <br>
+      <small>
+        Copyright &copy; 2022 raphaeluziel.com
+      </small>
+    </footer>
+
+  </main>
+
+  <!-- Default Statcounter code for Portfolio https://raphaeluziel.com -->
+  <!--
+  <script type="text/javascript">
+    var sc_project=12573636;
+    var sc_invisible=1;
+    var sc_security="5f72dd46";
+  </script>
+  <script type="text/javascript"
+          src="https://www.statcounter.com/counter/counter.js"
+          async></script>
+  <noscript>
+    <div class="statcounter">
+      <a title="Web Analytics Made Easy - StatCounter"
+         href="https://statcounter.com/"
+         target="_blank">
+         <img class="statcounter"
+              src="https://c.statcounter.com/12573636/0/5f72dd46/1/"
+              alt="Web Analytics Made Easy - StatCounter">
+      </a>
+    </div>
+  </noscript>
+  -->
+  <!-- End of Statcounter Code -->
+
+
+
+</body>
+
+</html>
